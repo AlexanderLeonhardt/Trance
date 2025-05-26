@@ -15,15 +15,22 @@ end
 function is_color(v)
     return type(v) == 'table' and #v == 4 and type(v[1]) == "number" and type(v[2]) == "number" and type(v[3]) == "number" and type(v[4]) == "number"
 end
-function load_file_with_fallback(primary_path, fallback_path, reset_config)
-    local success, result = pcall(function() return assert(load(nativefs.read(primary_path)))() end)
-    if success then
-        return result
-    end
-    reset_config()
-    local fallback_success, fallback_result = pcall(function() return assert(load(nativefs.read(fallback_path)))() end)
-    if fallback_success then
-        return fallback_result
+local function load_file_with_fallback(primary_path, fallback_path, on_fail)
+    local ok, content = pcall(function()
+        return nativefs.read(primary_path)
+    end)
+    if ok and content then
+        return assert(load(content))()
+    else
+        if on_fail then on_fail() end
+        local fallback_ok, fallback_content = pcall(function()
+            return nativefs.read(fallback_path)
+        end)
+        if fallback_ok and fallback_content then
+            return assert(load(fallback_content))()
+        else
+            return nil
+        end
     end
 end
 Trance_theme = load_file_with_fallback(
