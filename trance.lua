@@ -43,6 +43,17 @@ Trance_font = load_file_with_fallback(
     lovely.mod_dir .. "/Trance/fonts/m6x11.lua",
     function() Trance_config.font = "m6x11" end
 )
+for k, v in pairs(Trance_theme) do
+    if is_color(v) then 
+        Trance[k] = v
+    elseif type(v) == 'table' then
+        for _k, _v in pairs(Trance_theme[k]) do
+            if is_color(_v) then 
+                Trance[k][_k] = _v
+            end
+        end
+    end
+end
 Trance = {}
 for k, v in pairs(Trance_theme) do
     if is_color(v) then 
