@@ -26,7 +26,6 @@ function load_file_with_fallback(primary_path, fallback_path, reset_config)
         return fallback_result
     end
 end
-Trance = assert(load(nativefs.read(lovely.mod_dir .. "/Trance/colors/Base Game.lua")))()
 Trance_theme = load_file_with_fallback(
     lovely.mod_dir .. "/Trance/colors/" .. (Trance_config.palette or "Base Game") .. ".lua",
     lovely.mod_dir .. "/Trance/colors/Base Game.lua",
@@ -42,6 +41,19 @@ for k, v in pairs(Trance_theme) do
         Trance[k] = v
     elseif type(v) == 'table' then
         for _k, _v in pairs(Trance_theme[k]) do
+            if is_color(_v) then 
+                Trance[k][_k] = _v
+            end
+        end
+    end
+end
+Trance = {}
+for k, v in pairs(Trance_theme) do
+    if is_color(v) then 
+        Trance[k] = v
+    elseif type(v) == 'table' then
+        Trance[k] = {}
+        for _k, _v in pairs(v) do
             if is_color(_v) then 
                 Trance[k][_k] = _v
             end
