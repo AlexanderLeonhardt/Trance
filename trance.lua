@@ -30,6 +30,10 @@ Trance_config = {palette = "Base Game"}
 if nativefs.read(lovely.mod_dir .. "/Trance/config.lua") then
     Trance_config = load(nativefs.read(lovely.mod_dir .. "/Trance/config.lua"))()
 end
+local palette_file = lovely.mod_dir .. "/Trance/colors/" .. Trance_config.palette .. ".lua"
+if not nativefs.read(palette_file) then
+    Trance_config.palette = "Base_Game"
+end
 function is_color(v)
     return type(v) == 'table' and #v == 4 and type(v[1]) == "number" and type(v[2]) == "number" and type(v[3]) == "number" and type(v[4]) == "number"
 end
